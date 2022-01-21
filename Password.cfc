@@ -22,7 +22,8 @@ component
 			parallelisation: 2,
 			ouputLength: 32,
 			type: "Argon2id",
-			version: 19
+			version: 19,
+      randomSaltLength: 0
 		},
 		// These properties are described here:
 		// - https://github.com/Password4j/password4j/wiki/BCrypt
@@ -45,7 +46,7 @@ component
 	/**
 	* I initialize the password component with the given Password4j JAR paths.
 	*/
-	public void function init( required array jarPaths ) {
+  public void function init( required array jarPaths ) {
 
 		variables.jarPaths = arguments.jarPaths;
 
@@ -66,7 +67,8 @@ component
 		numeric parallelisation = defaults.argon2.parallelisation,
 		numeric ouputLength = defaults.argon2.ouputLength,
 		string type = defaults.argon2.type,
-		numeric version = defaults.argon2.version
+		numeric version = defaults.argon2.version,
+    numeric randomSaltLength = defaults.argon2.randomSaltLength
 		) {
 
 		var enum = javaNew( "com.password4j.types.Argon2" );
@@ -90,11 +92,21 @@ component
 		var hashingFunction = javaNew( "com.password4j.Argon2Function" )
 			.getInstance( memory, iterations, parallelisation, ouputLength, enumType, version )
 		;
-		var hashedInput = javaNew( "com.password4j.Password" )
+
+    if( randomSaltLength ){
+      var hashedInput = javaNew( "com.password4j.Password" )
+			.hash( input )
+      .addRandomSalt( randomSaltLength )
+			.with( hashingFunction )
+			.getResult()
+		;
+    } else {
+      var hashedInput = javaNew( "com.password4j.Password" )
 			.hash( input )
 			.with( hashingFunction )
 			.getResult()
 		;
+    }
 
 		return( hashedInput );
 
@@ -103,7 +115,7 @@ component
 
 	/**
 	* I verify the Argon2 hash of the given input against the expected hash.
-	* 
+	*
 	* NOTE: All hash-algorithm characteristics will be pulled directly out of the
 	* expected hash. As such, they do not need to be provided as arguments.
 	*/
@@ -170,7 +182,7 @@ component
 
 	/**
 	* I verify the BCrypt hash of the given input against the expected hash.
-	* 
+	*
 	* NOTE: All hash-algorithm characteristics will be pulled directly out of the
 	* expected hash. As such, they do not need to be provided as arguments.
 	*/
@@ -222,7 +234,7 @@ component
 
 	/**
 	* I verify the SCrypt hash of the given input against the expected hash.
-	* 
+	*
 	* NOTE: All hash-algorithm characteristics will be pulled directly out of the
 	* expected hash. As such, they do not need to be provided as arguments.
 	*/
