@@ -1,6 +1,10 @@
 /**
 * I provide a Lucee CFML wrapper around the Password4j Java library.
-* 
+*
+* Source: https://www.bennadel.com/blog/4056-using-password4j-and-the-bcrypt-scrypt-and-argon2-password-hashing-algorithms-in-lucee-cfml-5-3-7-47.htm
+* https://github.com/bennadel/Password4j-in-Lucee-CFML
+* With source code modified to not require jar paths - provided in init instead
+*
 * GitHub: https://github.com/Password4j/password4j
 * Maven: https://mvnrepository.com/artifact/com.password4j/password4j
 */
